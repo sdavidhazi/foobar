@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Impl.Extensions;
+using System.Collections.Generic;
 
 namespace Impl.Model
 {
@@ -23,10 +24,9 @@ namespace Impl.Model
 
         public Table(string rawTable)
         {
-            rawTable = rawTable.Replace("\r", "");
-            var lines = rawTable.Split('\n');
-            Length = lines.Length;
-            _table = new byte[Length][];
+            var lines = rawTable.Split();
+            _length = lines.Length;
+            _table = new byte[_length][];
 
             // TODO: Try to use multiple tasks to setup the initial model
             for (var row = 0; row < Length; row++)
@@ -36,6 +36,18 @@ namespace Impl.Model
                 {
                     _table[row][column] = lines[row][column].Map();
                 }
+            }
+        }
+
+        public byte this[int row, int column]
+        {
+            get
+            {
+                return _table[row][column];
+            }
+            set
+            {
+                _table[row][column] = value;
             }
         }
 
