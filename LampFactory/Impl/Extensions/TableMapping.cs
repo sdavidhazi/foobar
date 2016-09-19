@@ -16,7 +16,7 @@ namespace Impl.Extensions
 
         private static readonly Dictionary<char, byte> Mapping = new Dictionary<char, byte>()
         {
-            {'0',Wall0 },
+            {'0',Wall0},
             {'1',Wall1 },
             {'2',Wall2 },
             {'3',Wall3 },

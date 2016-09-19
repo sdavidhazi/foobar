@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Impl.Extensions;
+using System.Collections.Generic;
 
 namespace Impl.Model
 {
@@ -12,6 +13,9 @@ namespace Impl.Model
 
         public Table(string rawTable)
         {
+            if (string.IsNullOrEmpty(rawTable))
+                throw new ArgumentNullException(nameof(rawTable));
+
             var lines = rawTable.Split();
             _length = lines.Length;
             _table = new byte[_length][];
@@ -19,10 +23,23 @@ namespace Impl.Model
             // TODO: Try to use multiple tasks to setup the initial model
             for (var row = 0; row < _length; row++)
             {
+                _table[row] = new byte[_length];
                 for (var column = 0; column < _length; column++)
                 {
                     _table[row][column] = lines[row][column].Map();
                 }
+            }
+        }
+
+        public byte this[int row, int column]
+        {
+            get
+            {
+                return _table[row][column];
+            }
+            set
+            {
+                _table[row][column] = value;
             }
         }
 
@@ -49,6 +66,25 @@ namespace Impl.Model
             }
 
             _table[row][column] = TableMapping.Lamp;
+        }
+
+        public override string ToString()
+        {
+            return new string(ToEnumerable().ToArray());
+        }
+
+        private IEnumerable<char> ToEnumerable()
+        {
+            for (var row = 0; row < _length; row++)
+            {
+                for (var column = 0; column < _length; column++)
+                {
+                    yield return _table[row][column].Map();
+                }
+
+                if (row < _length - 1)
+                    yield return '\n';
+            }
         }
 
         private bool IsCovered(int row, int column)
