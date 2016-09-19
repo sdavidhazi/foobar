@@ -81,9 +81,12 @@ namespace Impl.Model
 
             _table[row][column] = TableMapping.Lamp;
             Light(row, column);
-            //Console.WriteLine(this);
-
             SetupLightBesideWalls();
+
+            //Console.WriteLine(this);
+            //Console.WriteLine();
+            //if (this.Invalid)
+            //    Console.WriteLine("Invalid");
         }
 
         public void SetupLightBesideWalls()
