@@ -24,9 +24,10 @@ namespace Impl.Model
 
         public Table(string rawTable)
         {
-            var lines = rawTable.Split();
-            _length = lines.Length;
-            _table = new byte[_length][];
+            rawTable = rawTable.Replace("\r", "");
+            var lines = rawTable.Split('\n');
+            Length = lines.Length;
+            _table = new byte[Length][];
 
             // TODO: Try to use multiple tasks to setup the initial model
             for (var row = 0; row < Length; row++)
@@ -210,7 +211,6 @@ namespace Impl.Model
             return true;
         }
 
-        public byte this[int row, int col] => _table[row][col];
 
         private bool IsCovered(int row, int column)
         {
