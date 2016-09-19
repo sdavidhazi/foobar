@@ -19,7 +19,17 @@ namespace Impl.Model
         private Table(Table table)
         {
             Length = table.Length;
-            _table = (byte[][])table._table.Clone();
+            Invalid = table.Invalid;
+            _table = new byte[Length][];
+            for (int i=0; i<Length; i++)
+                _table[i] = (byte[])table._table[i].Clone();
+            //for (int i = 0; i < Length; i++)
+            //{
+            //    _table[i] = new byte[Length];
+            //    for (int j = 0; j < Length; j++)
+            //        _table[i][j] = table._table[i][j];
+
+            //}
         }
 
         public Table(string rawTable)
@@ -91,9 +101,10 @@ namespace Impl.Model
 
         public void SetupLightBesideWalls()
         {
-            for (int col = 0; col < Length; col++)
+            for (int row = 0; row < Length; row++)
             {
-                for (int row = 0; row < Length; row++)
+
+                for (int col = 0; col < Length; col++)
                 {
                     if (_table[row][col] > TableMapping.Wall4)
                         continue;
@@ -115,7 +126,7 @@ namespace Impl.Model
                             freeCol = col;
                         }
                     }
-                    if (row < Length-1)
+                    if (row < Length - 1)
                     {
                         if (_table[row + 1][col] == TableMapping.Lamp)
                             lampCount++;
@@ -129,24 +140,24 @@ namespace Impl.Model
 
                     if (col > 0)
                     {
-                        if (_table[row][col-1] == TableMapping.Lamp)
+                        if (_table[row][col - 1] == TableMapping.Lamp)
                             lampCount++;
-                        if (_table[row][col-1] == TableMapping.Free)
+                        if (_table[row][col - 1] == TableMapping.Free)
                         {
                             freeCount++;
                             freeRow = row;
-                            freeCol = col-1;
+                            freeCol = col - 1;
                         }
                     }
                     if (col < Length - 1)
                     {
-                        if (_table[row][col+1] == TableMapping.Lamp)
+                        if (_table[row][col + 1] == TableMapping.Lamp)
                             lampCount++;
-                        if (_table[row][col+1] == TableMapping.Free)
+                        if (_table[row][col + 1] == TableMapping.Free)
                         {
                             freeCount++;
                             freeRow = row;
-                            freeCol = col+1;
+                            freeCol = col + 1;
                         }
                     }
 
@@ -165,7 +176,7 @@ namespace Impl.Model
             }
         }
 
-        
+
         private void Light(int row, int column)
         {
             for (int i = row + 1; i < Length; i++)
@@ -312,7 +323,7 @@ namespace Impl.Model
                 {
                     sb.Append(_table[row][col].Map());
                 }
-                if (row < Length-1)
+                if (row < Length - 1)
                     sb.AppendLine();
             }
             return sb.ToString();

@@ -14,11 +14,12 @@ namespace Impl
         private Table Solve(Table table, int fromRow, int fromCol)
         {
             var length = table.Length;
-            for (var col = fromCol; col < length; col++)
-            { 
-                for (var row = fromRow; row < length; row++)
+            for (var row = 0; row < length; row++)
+            {
+                for (var col = 0; col < length; col++)
                 {
-                    if (table[row, col]!=TableMapping.Free)
+
+                    if (table[row, col] != TableMapping.Free)
                         continue;
 
                     var clone = table.Clone();
@@ -30,7 +31,7 @@ namespace Impl
                     if (clone.IsReady())
                         return clone;
 
-                    var result = Solve(clone, row == length - 1 ? 0 : row + 1, row == length - 1 ? col + 1: col);
+                    var result = Solve(clone, col == length - 1 ? 0 : col + 1, col == length - 1 ? row + 1 : row);
                     if (result != null)
                         return result;
                 }
@@ -42,7 +43,10 @@ namespace Impl
         {
             var puzzle = new Table(table);
             puzzle.SetupLightBesideWalls();
-            return Solve(puzzle, 0, 0)?.ToString();
+            Console.WriteLine(puzzle);
+            var result = Solve(puzzle, 0, 0);
+            Console.WriteLine(result);
+            return result?.ToString();
         }
     }
 }

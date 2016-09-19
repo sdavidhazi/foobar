@@ -96,6 +96,7 @@ namespace Impl.Test
             Assert.That(result, Is.Not.Null);
             result.Replace('x', ' ');
             var table = new Table(result);
+
             //TODO
             //Assert.That(table.IsCorrect);
         }
