@@ -13,6 +13,7 @@ namespace Impl.Extensions
         public const byte Wall = 5;
         public const byte Free = 6;
         public const byte Lamp = 7;
+        public const byte Lit = 8;
 
         private static readonly Dictionary<char, byte> Mapping = new Dictionary<char, byte>()
         {
@@ -24,6 +25,7 @@ namespace Impl.Extensions
             {'#',Wall },
             {' ',Free },
             {'o',Lamp },
+            {'x',Lit},
         };
 
         public static char Map(this byte value)

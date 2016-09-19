@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading.Tasks;
 using Impl.Extensions;
 
@@ -7,31 +11,45 @@ namespace Impl.Model
 {
     public class Table
     {
-        private readonly int _length;
+        public int Length { get; }
+        public bool Invalid { get; set; }
         private readonly byte[][] _table;
+
+        private Table(Table table)
+        {
+            Length = table.Length;
+            _table = (byte[][])table._table.Clone();
+        }
 
         public Table(string rawTable)
         {
-            var lines = rawTable.Split();
-            _length = lines.Length;
-            _table = new byte[_length][];
+            rawTable = rawTable.Replace("\r", "");
+            var lines = rawTable.Split('\n');
+            Length = lines.Length;
+            _table = new byte[Length][];
 
             // TODO: Try to use multiple tasks to setup the initial model
-            for (var row = 0; row < _length; row++)
+            for (var row = 0; row < Length; row++)
             {
-                for (var column = 0; column < _length; column++)
+                _table[row] = new byte[Length];
+                for (var column = 0; column < Length; column++)
                 {
                     _table[row][column] = lines[row][column].Map();
                 }
             }
         }
 
+        public Table Clone()
+        {
+            return new Table(this);
+        }
+
         public bool IsCorrect()
         {
             // TODO: Try to use multiple tasks to evaluate correctness
-            for (var row = 0; row < _length; row++)
+            for (var row = 0; row < Length; row++)
             {
-                for (var column = 0; column < _length; column++)
+                for (var column = 0; column < Length; column++)
                 {
                     if (!IsCorrect(row, column))
                         return false;
@@ -49,7 +67,138 @@ namespace Impl.Model
             }
 
             _table[row][column] = TableMapping.Lamp;
+            Light(row, column);
+            //Console.WriteLine(this);
+
+            SetupLightBesideWalls();
         }
+
+        public void SetupLightBesideWalls()
+        {
+            for (int col = 0; col < Length; col++)
+            {
+                for (int row = 0; row < Length; row++)
+                {
+                    if (_table[row][col] > TableMapping.Wall4)
+                        continue;
+
+                    int lampCount = 0;
+                    int freeCount = 0;
+
+                    int freeRow = -1;
+                    int freeCol = -1;
+
+                    if (row > 0)
+                    {
+                        if (_table[row - 1][col] == TableMapping.Lamp)
+                            lampCount++;
+                        if (_table[row - 1][col] == TableMapping.Free)
+                        {
+                            freeCount++;
+                            freeRow = row - 1;
+                            freeCol = col;
+                        }
+                    }
+                    if (row < Length-1)
+                    {
+                        if (_table[row + 1][col] == TableMapping.Lamp)
+                            lampCount++;
+                        if (_table[row + 1][col] == TableMapping.Free)
+                        {
+                            freeCount++;
+                            freeRow = row + 1;
+                            freeCol = col;
+                        }
+                    }
+
+                    if (col > 0)
+                    {
+                        if (_table[row][col-1] == TableMapping.Lamp)
+                            lampCount++;
+                        if (_table[row][col-1] == TableMapping.Free)
+                        {
+                            freeCount++;
+                            freeRow = row;
+                            freeCol = col-1;
+                        }
+                    }
+                    if (col < Length - 1)
+                    {
+                        if (_table[row][col+1] == TableMapping.Lamp)
+                            lampCount++;
+                        if (_table[row][col+1] == TableMapping.Free)
+                        {
+                            freeCount++;
+                            freeRow = row;
+                            freeCol = col+1;
+                        }
+                    }
+
+                    if (lampCount + freeCount < _table[row][col])
+                    {
+                        Invalid = true;
+                        return;
+                    }
+
+                    if (lampCount + freeCount == _table[row][col] && freeCount > 0)
+                    {
+                        SetupLamp(freeRow, freeCol);
+                        return;
+                    }
+                }
+            }
+        }
+
+        
+        private void Light(int row, int column)
+        {
+            for (int i = row + 1; i < Length; i++)
+            {
+                if (_table[i][column] == TableMapping.Free || _table[i][column] == TableMapping.Lit)
+                    _table[i][column] = TableMapping.Lit;
+                else
+                    break;
+            }
+
+            for (int i = row - 1; i >= 0; i--)
+            {
+                if (_table[i][column] == TableMapping.Free || _table[i][column] == TableMapping.Lit)
+                    _table[i][column] = TableMapping.Lit;
+                else
+                    break;
+            }
+
+            for (int i = column + 1; i < Length; i++)
+            {
+                if (_table[row][i] == TableMapping.Free || _table[row][i] == TableMapping.Lit)
+                    _table[row][i] = TableMapping.Lit;
+                else
+                    break;
+            }
+
+            for (int i = column - 1; i >= 0; i--)
+            {
+                if (_table[row][i] == TableMapping.Free || _table[row][i] == TableMapping.Lit)
+                    _table[row][i] = TableMapping.Lit;
+                else
+                    break;
+            }
+        }
+
+        public bool IsReady()
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                for (int j = 0; j < Length; j++)
+                {
+                    if (_table[i][j] == TableMapping.Free)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        public byte this[int row, int col] => _table[row][col];
 
         private bool IsCovered(int row, int column)
         {
@@ -62,7 +211,7 @@ namespace Impl.Model
                 var rowIndex = row + x;
                 var colIndex = column + y;
 
-                while (rowIndex >= 0 && rowIndex < _length && colIndex >= 0 && colIndex < _length)
+                while (rowIndex >= 0 && rowIndex < Length && colIndex >= 0 && colIndex < Length)
                 {
                     var next = _table[rowIndex][colIndex];
 
@@ -119,12 +268,12 @@ namespace Impl.Model
                 var rowIndex = row + x;
 
                 if (rowIndex < 0) return 0;
-                if (rowIndex >= _length) return 0;
+                if (rowIndex >= Length) return 0;
 
                 var colIndex = column + y;
 
                 if (colIndex < 0) return 0;
-                if (colIndex >= _length) return 0;
+                if (colIndex >= Length) return 0;
 
                 return _table[rowIndex][colIndex] == TableMapping.Lamp ? 1 : 0;
             };
@@ -137,6 +286,21 @@ namespace Impl.Model
             return Task.WhenAll(taskHorizontalLeft, taskHorizontalRight, taskVerticalUp, taskVerticalDown)
                 .Result
                 .Sum(x => x);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int row = 0; row < Length; row++)
+            {
+                for (int col = 0; col < Length; col++)
+                {
+                    sb.Append(_table[row][col].Map());
+                }
+                if (row < Length-1)
+                    sb.AppendLine();
+            }
+            return sb.ToString();
         }
     }
 }
