@@ -20,6 +20,7 @@ namespace Impl.Model
         public int Length { get; }
         public bool Invalid { get; set; }
         private readonly byte[][] _table;
+        private bool[,] _forbidden;
         public bool HasMissingWallLamps = true;
 
         private Table(Table table)
@@ -29,6 +30,7 @@ namespace Impl.Model
             _table = new byte[Length][];
             for (int i=0; i<Length; i++)
                 _table[i] = (byte[])table._table[i].Clone();
+            _forbidden = (bool[,])table._forbidden.Clone();
             //for (int i = 0; i < Length; i++)
             //{
             //    _table[i] = new byte[Length];
@@ -54,9 +56,20 @@ namespace Impl.Model
                     _table[row][column] = lines[row][column].Map();
                 }
             }
+
+            _forbidden = new bool[Length,Length];
+            for (var row = 0; row < Length; row++)
+            {
+                for (var column = 0; column < Length; column++)
+                {
+                    if (HasNeighbour(row, column, TableMapping.Wall0))
+                        _forbidden[row, column] = true;
+                }
+            }
         }
 
-        public byte this[int row, int column]
+        public
+            byte this[int row, int column]
         {
             get
             {
@@ -150,7 +163,7 @@ namespace Impl.Model
                     {
                         if (_table[row - 1][col] == TableMapping.Lamp)
                             lampCount++;
-                        if (_table[row - 1][col] == TableMapping.Free)
+                        if (_table[row - 1][col] == TableMapping.Free && !_forbidden[row-1,col])
                         {
                             freeCount++;
                             freeRow = row - 1;
@@ -161,7 +174,7 @@ namespace Impl.Model
                     {
                         if (_table[row + 1][col] == TableMapping.Lamp)
                             lampCount++;
-                        if (_table[row + 1][col] == TableMapping.Free)
+                        if (_table[row + 1][col] == TableMapping.Free && !_forbidden[row + 1, col])
                         {
                             freeCount++;
                             freeRow = row + 1;
@@ -173,7 +186,7 @@ namespace Impl.Model
                     {
                         if (_table[row][col - 1] == TableMapping.Lamp)
                             lampCount++;
-                        if (_table[row][col - 1] == TableMapping.Free)
+                        if (_table[row][col - 1] == TableMapping.Free && !_forbidden[row, col-1])
                         {
                             freeCount++;
                             freeRow = row;
@@ -184,7 +197,7 @@ namespace Impl.Model
                     {
                         if (_table[row][col + 1] == TableMapping.Lamp)
                             lampCount++;
-                        if (_table[row][col + 1] == TableMapping.Free)
+                        if (_table[row][col + 1] == TableMapping.Free && !_forbidden[row, col + 1])
                         {
                             freeCount++;
                             freeRow = row;
@@ -206,13 +219,89 @@ namespace Impl.Model
 
                     if (lampCount < _table[row][col])
                         missingLamp = true;
+
+                    if (lampCount == _table[row][col])
+                    {
+                        if (row > 0)
+                            _forbidden[row - 1, col] = true;
+                        if (row < Length - 1)
+                            _forbidden[row + 1, col] = true;
+                        if (col > 0)
+                            _forbidden[row, col-1] = true;
+                        if (col < Length - 1)
+                            _forbidden[row, col+1] = true;
+                    
+                    }
                 }
             }
             
                 HasMissingWallLamps = missingLamp;
         }
 
+        public List<Tuple<int, int>> GetMinCellList()
+        {
+            List<Tuple<int, int>> result = null;
+            for (int row = 0; row < Length; row++)
+            {
+                for (int col = 0; col < Length; col++)
+                {
+                    if (_table[row][col] != TableMapping.Free)
+                        continue;
+                    var list = new List<Tuple<int, int>>();
+                    if (!_forbidden[row, col])
+                        list.Add(Tuple.Create(row, col));
 
+                    for (int i = row - 1; i >= 0; i--)
+                    {
+                        if (_table[i][col] == TableMapping.Free)
+                        {
+                            list.Add(Tuple.Create(i, col));
+                            continue;
+                        }
+                        if (_table[i][col] != TableMapping.Lit)
+                            break;                        
+                    }
+                    for (int i = row + 1; i < Length; i++)
+                    {
+                        if (_table[i][col] == TableMapping.Free)
+                        {
+                            list.Add(Tuple.Create(i, col));
+                            continue;
+                        }
+                        if (_table[i][col] != TableMapping.Lit)
+                            break;
+                    }
+                    for (int i = col - 1; i >= 0; i--)
+                    {
+                        if (_table[row][i] == TableMapping.Free)
+                        {
+                            list.Add(Tuple.Create(row, i));
+                            continue;
+                        }
+                        if (_table[row][i] != TableMapping.Lit)
+                            break;
+                    }
+                    for (int i = col + 1; i <Length; i++)
+                    {
+                        if (_table[row][i] == TableMapping.Free)
+                        {
+                            list.Add(Tuple.Create(row, i));
+                            continue;                           
+                        }
+                        if (_table[row][i] != TableMapping.Lit)
+                            break;
+                    }
+                    if (result == null || list.Count < result.Count)
+                        result = list;
+                }
+            }
+            return result;
+        }
+
+        public bool IsForbidden(int row, int col)
+        {
+            return _forbidden[row, col];
+        }
         private void Light(int row, int column)
         {
             for (int i = row + 1; i < Length; i++)
