@@ -74,8 +74,20 @@ namespace Impl.Model
             if (col > 0 && _table[row][col - 1] == cellType) return true;
             if (col < Length - 1 && _table[row][col + 1] == cellType) return true;
             return false;
-
         }
+
+
+        public int NeighbourCount(int row, int col, byte cellType)
+        {
+            int count = 0;
+            if (row > 0 && _table[row - 1][col] == cellType) ++count;
+            if (row < Length - 1 && _table[row + 1][col] == cellType) ++count;
+            if (col > 0 && _table[row][col - 1] == cellType) ++count;
+            if (col < Length - 1 && _table[row][col + 1] == cellType) ++count;
+
+            return count;
+        }
+
         public Table Clone()
         {
             return new Table(this);

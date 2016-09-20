@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Impl.Model;
+using Impl.Test.TestData;
 using NUnit.Framework;
 using Shouldly;
 
@@ -12,29 +12,16 @@ namespace Impl.Test
     [TestFixture]
     public class SolverTest
     {
-        [Test]
-        public void Solve_Small_Table()
-        {
-            string puzzle = @"  0    
+        #region Puzzle Constants
+        const string PuzzleSmall = @"  0    
  #   2 
       3
    0   
 #      
  1   # 
     2  ";
-            // Arrange
-            var solver = new Solver();
 
-            var result = solver.Solve(puzzle);
-            Assert.That(result, Is.Not.Null);
-            var table = new Table(result);
-            Assert.That(table.IsCorrect());
-        }
-
-        [Test]
-        public void Solve_Mid_Table()
-        {
-            string puzzle = @"   #      1   
+        const string PuzzleMiddle = @"   #      1   
  1 #   1    # 
   1 1 21   #  
 #       #   2#
@@ -48,22 +35,8 @@ namespace Impl.Test
   3   #0 # 3  
  #    #   # # 
    #      #   ";
-            // Arrange
-            var solver = new Solver();
 
-            var result = solver.Solve(puzzle);
-            Assert.That(result, Is.Not.Null);
-            result.Replace('x', ' ');
-            var table = new Table(result);
-
-            //TODO
-            Assert.That(table.IsCorrect());
-        }
-
-        [Test]
-        public void Solve_Large_Table()
-        {
-            string puzzle = @"# #       1 #     ##  2 #
+        const string PuzzleLarge = @"# #       1 #     ##  2 #
   # # 1#     10#     #   
 2 1    1   #   ##  3  ###
  # #          1   ## #   
@@ -88,17 +61,108 @@ namespace Impl.Test
 ###  #  21   0   2    # 2
    3     1##     ## # #  
 # #  1#     # 3       1 #";
+
+        #endregion
+
+        [Test]
+        public void Solve_Small_Table()
+        {
+            string puzzle = PuzzleSmall;
+
             // Arrange
+            string result;
             var solver = new Solver();
+            using (new TestActionScope(nameof(Solve_Small_Table)))
+            {
+                result = solver.Solve(puzzle);
+            }
 
-            var result = solver.Solve(puzzle);
             Assert.That(result, Is.Not.Null);
-            result.Replace('x', ' ');
             var table = new Table(result);
-
-            //TODO
             Assert.That(table.IsCorrect());
         }
 
+        [Test]
+        public void Solve_Mid_Table()
+        {
+            string puzzle = PuzzleMiddle;
+
+            // Arrange
+            var solver = new Solver();
+            string result;
+            using (new TestActionScope(nameof(Solve_Mid_Table)))
+            {
+                result = solver.Solve(puzzle);
+            }
+
+            Assert.That(result, Is.Not.Null);
+            var table = new Table(result);
+
+            Assert.That(table.IsCorrect());
+        }
+
+        [Test]
+        public void Solve_Large_Table()
+        {
+            string puzzle = PuzzleLarge; 
+
+            // Arrange
+            var solver = new Solver();
+            string result;
+
+            using (new TestActionScope(nameof(Solve_Large_Table)))
+            {
+                result = solver.Solve(puzzle);
+            }
+
+            Assert.That(result, Is.Not.Null);
+            var table = new Table(result);
+
+            Assert.That(table.IsCorrect());
+        }
+
+        [Test]
+        public void Solve_Small_Table_WithReplacedPuzzles()
+        {
+            var puzzle = PuzzleSmall;
+
+            var solver = new Solver();
+            var testDataFactory = new TestDataFactory(solver);
+
+            foreach (var transformedPuzzle in testDataFactory.TransformByReplace(puzzle))
+            {
+                string result;
+                using (new TestActionScope(nameof(Solve_Small_Table_WithReplacedPuzzles)))
+                {
+                    result = solver.Solve(transformedPuzzle);
+                }
+
+                Assert.That(result, Is.Not.Null);
+                var table = new Table(result);
+                Assert.That(table.IsCorrect());
+            }
+        }
+
+        [Test]
+        public void Solve_Mid_Table_WithReplacedPuzzles()
+        {
+            var puzzle = PuzzleMiddle;
+
+            var solver = new Solver();
+            var testDataFactory = new TestDataFactory(solver);
+
+            foreach (var transformedPuzzle in testDataFactory.TransformByReplace(puzzle))
+            {
+                string result;
+                using (new TestActionScope(nameof(Solve_Mid_Table_WithReplacedPuzzles)))
+                {
+                    result = solver.Solve(transformedPuzzle);
+                }
+
+                Assert.That(result, Is.Not.Null);
+                var table = new Table(result);
+                Assert.That(table.IsCorrect());
+            }
+        }
     }
 }
