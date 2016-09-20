@@ -11,8 +11,9 @@ namespace Impl
 {
     public class Solver : ISolver
     {
+        private int firstNonWallIndex = -1;
         // TODO: Profile the code to see expensive parts
-        private Table Solve(Table table, IList<Tuple<int,int>> cells, int fromIndex)
+        private Table Solve(Table table, IList<Tuple<int, int>> cells, int fromIndex)
         {
             // TODO: Try to use stack instead of recursive calls 
             // TODO: Try to indetify wrong "directions" earlier in the logical tree
@@ -22,28 +23,34 @@ namespace Impl
                 var row = cells[i].Item1;
                 var col = cells[i].Item2;
 
-                    if (table[row, col] != TableMapping.Free)
-                        continue;
+                if (i < firstNonWallIndex && !table.HasMissingWallLamps)
+                    continue;
 
-                    var clone = table.Clone();
+                if (i >= firstNonWallIndex && table.HasMissingWallLamps)
+                    return null;
 
-                    clone.SetupLamp(row, col);
-                    if (clone.Invalid)
-                        continue;
+                if (table[row, col] != TableMapping.Free)
+                    continue;
 
-                    if (clone.IsReady())
-                        return clone;
+                var clone = table.Clone();
 
-                    var result = Solve(clone, cells, i+1);
-                    if (result != null)
-                        return result;
-                }
+                clone.SetupLamp(row, col);
+                if (clone.Invalid)
+                    continue;
+
+                if (clone.IsReady())
+                    return clone;
+
+                var result = Solve(clone, cells, i + 1);
+                if (result != null)
+                    return result;
+            }
             return null;
         }
 
         private IList<Tuple<int, int>> CreatePriorityQueue(Table table)
         {
-            byte[,] priorities = new byte[table.Length,table.Length];
+            byte[,] priorities = new byte[table.Length, table.Length];
             var length = table.Length;
 
             List<KeyValuePair<byte, Tuple<int, int>>> list = new List<KeyValuePair<byte, Tuple<int, int>>>();
@@ -70,21 +77,23 @@ namespace Impl
 
                     if (priority == 255)
                         continue;
-                    list.Add(new KeyValuePair<byte, Tuple<int, int>>(priority, Tuple.Create(row,col)));
+                    list.Add(new KeyValuePair<byte, Tuple<int, int>>(priority, Tuple.Create(row, col)));
                 }
             }
 
-            return list.OrderBy(kv => kv.Key).Select(kv => kv.Value).ToList();
+            var result = list.OrderBy(kv => kv.Key);
+            firstNonWallIndex = result.Count(kv => kv.Key < 9);
+            return result.Select(kv => kv.Value).ToList();
         }
 
         public string Solve(string table)
-        {            
+        {
             var puzzle = new Table(table);
             puzzle.SetupLightBesideWalls();
             Console.WriteLine(puzzle.ToString());
-            var result = Solve(puzzle, CreatePriorityQueue(puzzle),0);
+            var result = Solve(puzzle, CreatePriorityQueue(puzzle), 0);
             Console.WriteLine(result?.ToString());
-            return result?.ToString().Replace('x',' ');
+            return result?.ToString().Replace('x', ' ');
         }
     }
 }

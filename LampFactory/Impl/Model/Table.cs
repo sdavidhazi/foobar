@@ -20,6 +20,7 @@ namespace Impl.Model
         public int Length { get; }
         public bool Invalid { get; set; }
         private readonly byte[][] _table;
+        public bool HasMissingWallLamps = true;
 
         private Table(Table table)
         {                        
@@ -76,6 +77,17 @@ namespace Impl.Model
             return false;
 
         }
+
+        public bool HasWallNeighbour(int row, int col)
+        {
+            if (row > 0 && _table[row - 1][col] <= TableMapping.Wall4) return true;
+            if (row < Length - 1 && _table[row + 1][col] <= TableMapping.Wall4) return true;
+            if (col > 0 && _table[row][col - 1] <= TableMapping.Wall4) return true;
+            if (col < Length - 1 && _table[row][col + 1] <= TableMapping.Wall4) return true;
+            return false;
+
+        }
+
         public Table Clone()
         {
             return new Table(this);
@@ -105,7 +117,10 @@ namespace Impl.Model
 
             _table[row][column] = TableMapping.Lamp;
             Light(row, column);
-            SetupLightBesideWalls();
+            if (HasMissingWallLamps)
+            {
+                SetupLightBesideWalls();
+            }
 
             //Console.WriteLine(this);
             //Console.WriteLine();
@@ -115,6 +130,7 @@ namespace Impl.Model
 
         public void SetupLightBesideWalls()
         {
+            bool missingLamp = false;
             for (int row = 0; row < Length; row++)
             {
 
@@ -186,8 +202,13 @@ namespace Impl.Model
                         SetupLamp(freeRow, freeCol);
                         return;
                     }
+
+                    if (lampCount < _table[row][col])
+                        missingLamp = true;
                 }
             }
+            
+                HasMissingWallLamps = missingLamp;
         }
 
 
