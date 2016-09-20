@@ -93,7 +93,6 @@ namespace Impl
             Console.WriteLine(puzzle.ToString());
             var result = Solve(puzzle, CreatePriorityQueue(puzzle), 0);
             Console.WriteLine(result?.ToString());
-            firstNonWallIndex = -1;
             return result?.ToString().Replace('x', ' ');
         }
     }

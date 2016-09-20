@@ -1,6 +1,11 @@
-﻿using Impl.Model;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Impl.Model;
 using Impl.Test.TestData;
 using NUnit.Framework;
+using Shouldly;
 
 namespace Impl.Test
 {
@@ -99,7 +104,7 @@ namespace Impl.Test
         [Test]
         public void Solve_Large_Table()
         {
-            string puzzle = PuzzleLarge;
+            string puzzle = PuzzleLarge; 
 
             // Arrange
             var solver = new Solver();
@@ -150,51 +155,6 @@ namespace Impl.Test
             {
                 string result;
                 using (new TestActionScope(nameof(Solve_Mid_Table_WithReplacedPuzzles)))
-                {
-                    result = solver.Solve(transformedPuzzle);
-                }
-
-                Assert.That(result, Is.Not.Null);
-                var table = new Table(result);
-                Assert.That(table.IsCorrect());
-            }
-        }
-
-        [Test]
-        public void Solve_Small_Table_WithRotatedPuzzles()
-        {
-            var puzzle = PuzzleSmall;
-
-            var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
-
-            foreach (var transformedPuzzle in testDataFactory.TransformByRotation(puzzle))
-            {
-                string result;
-                using (new TestActionScope(nameof(Solve_Small_Table_WithRotatedPuzzles)))
-                {
-                    result = solver.Solve(transformedPuzzle);
-                }
-
-                Assert.That(result, Is.Not.Null);
-                var table = new Table(result);
-                Assert.That(table.IsCorrect());
-            }
-        }
-
-        [Test]
-        public void Solve_Mid_Table_WithRotatedPuzzles()
-        {
-            var puzzle = PuzzleMiddle;
-
-            var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
-
-            foreach (var transformedPuzzle in testDataFactory.TransformByRotation(puzzle))
-            {
-                solver = new Solver();
-                string result;
-                using (new TestActionScope(nameof(Solve_Mid_Table_WithRotatedPuzzles)))
                 {
                     result = solver.Solve(transformedPuzzle);
                 }
