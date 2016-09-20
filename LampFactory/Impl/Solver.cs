@@ -11,10 +11,10 @@ namespace Impl
 {
     public class Solver : ISolver
     {
-        private Table Solve(Table table, int fromRow, int fromCol)
+        private Table Solve(Table table, int fromRow)
         {
             var length = table.Length;
-            for (var row = 0; row < length; row++)
+            for (var row = fromRow; row < length; row++)
             {
                 for (var col = 0; col < length; col++)
                 {
@@ -31,7 +31,7 @@ namespace Impl
                     if (clone.IsReady())
                         return clone;
 
-                    var result = Solve(clone, col == length - 1 ? 0 : col + 1, col == length - 1 ? row + 1 : row);
+                    var result = Solve(clone,  col == length - 1 ? row+1 : row);
                     if (result != null)
                         return result;
                 }
@@ -43,10 +43,8 @@ namespace Impl
         {
             var puzzle = new Table(table);
             puzzle.SetupLightBesideWalls();
-            Console.WriteLine(puzzle);
-            var result = Solve(puzzle, 0, 0);
-            Console.WriteLine(result);
-            return result?.ToString();
+            var result = Solve(puzzle, 0);
+            return result?.ToString().Replace('x',' ');
         }
     }
 }
