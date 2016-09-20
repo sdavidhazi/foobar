@@ -44,6 +44,7 @@ namespace Impl
             var puzzle = new Table(table);
             puzzle.SetupLightBesideWalls();
             var result = Solve(puzzle, 0);
+            Console.WriteLine(result?.ToString());
             return result?.ToString().Replace('x',' ');
         }
     }

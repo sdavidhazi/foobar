@@ -161,7 +161,7 @@ namespace Impl.Model
                         }
                     }
 
-                    if (lampCount + freeCount < _table[row][col])
+                    if (lampCount + freeCount < _table[row][col] || lampCount > _table[row][col])
                     {
                         Invalid = true;
                         return;
@@ -218,7 +218,7 @@ namespace Impl.Model
             {
                 for (int j = 0; j < Length; j++)
                 {
-                    if (_table[i][j] == TableMapping.Free)
+                    if (_table[Length-i-1][Length-j-1] == TableMapping.Free)
                         return false;
                 }
             }

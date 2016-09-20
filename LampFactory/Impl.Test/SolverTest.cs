@@ -27,7 +27,6 @@ namespace Impl.Test
 
             var result = solver.Solve(puzzle);
             Assert.That(result, Is.Not.Null);
-            result.Replace('x', ' ');
             var table = new Table(result);
             //TODO
             //Assert.That(table.IsCorrect);
