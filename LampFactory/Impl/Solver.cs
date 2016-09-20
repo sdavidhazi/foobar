@@ -11,8 +11,11 @@ namespace Impl
 {
     public class Solver : ISolver
     {
+        // TODO: Profile the code to see expensive parts
         private Table Solve(Table table, int fromRow)
         {
+            // TODO: Try to use stack instead of recursive calls 
+            // TODO: Try to indetify wrong "directions" earlier in the logical tree
             var length = table.Length;
             for (var row = fromRow; row < length; row++)
             {

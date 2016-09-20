@@ -12,12 +12,17 @@ namespace Impl.Model
 {
     public class Table
     {
+        // TODO: Balazs: Use a list of prioritized indexes to iterate the table
+        // TODO: Use a two dimensional array instead of array in array        
+        // TODO: Try to cache wall positions to speed up SetupLampBesideWall method
+        // TODO: Use a counter to track number of free places --> IsReady is simplified
+
         public int Length { get; }
         public bool Invalid { get; set; }
         private readonly byte[][] _table;
 
         private Table(Table table)
-        {
+        {                        
             Length = table.Length;
             Invalid = table.Invalid;
             _table = new byte[Length][];
