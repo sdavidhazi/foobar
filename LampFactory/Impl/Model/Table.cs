@@ -254,14 +254,16 @@ namespace Impl.Model
                 return false;
             };
 
-            var taskHorizontalLeft = new Task<bool>(() => evaluateLamps(-1, 0));
-            var taskHorizontalRight = new Task<bool>(() => evaluateLamps(1, 0));
-            var taskVerticalUp = new Task<bool>(() => evaluateLamps(0, 1));
-            var taskVerticalDown = new Task<bool>(() => evaluateLamps(0, -1));
+            var taskHorizontalLeft = Task.Run(()=> evaluateLamps(-1, 0));
+            var taskHorizontalRight = Task.Run(() => evaluateLamps(1, 0));
+            var taskVerticalUp = Task.Run(() => evaluateLamps(0, 1));
+            var taskVerticalDown = Task.Run(() => evaluateLamps(0, -1));
 
-            return Task.WhenAll(taskHorizontalLeft, taskHorizontalRight, taskVerticalUp, taskVerticalDown)
+            var result = Task.WhenAll(taskHorizontalLeft, taskHorizontalRight, taskVerticalUp, taskVerticalDown)
                 .Result
                 .Any(x => x);
+
+            return result;
         }
 
         private bool IsCorrect(int row, int column)
@@ -304,14 +306,16 @@ namespace Impl.Model
                 return _table[rowIndex][colIndex] == TableMapping.Lamp ? 1 : 0;
             };
 
-            var taskHorizontalLeft = new Task<int>(() => evaluateNeighbor(-1, 0));
-            var taskHorizontalRight = new Task<int>(() => evaluateNeighbor(1, 0));
-            var taskVerticalUp = new Task<int>(() => evaluateNeighbor(0, 1));
-            var taskVerticalDown = new Task<int>(() => evaluateNeighbor(0, -1));
+            var taskHorizontalLeft = Task.Run(() => evaluateNeighbor(-1, 0));
+            var taskHorizontalRight = Task.Run(() => evaluateNeighbor(1, 0));
+            var taskVerticalUp = Task.Run(() => evaluateNeighbor(0, 1));
+            var taskVerticalDown = Task.Run(() => evaluateNeighbor(0, -1));
 
-            return Task.WhenAll(taskHorizontalLeft, taskHorizontalRight, taskVerticalUp, taskVerticalDown)
+            var sum = Task.WhenAll(taskHorizontalLeft, taskHorizontalRight, taskVerticalUp, taskVerticalDown)
                 .Result
                 .Sum(x => x);
+
+            return sum;
         }
 
         public override string ToString()

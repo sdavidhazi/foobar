@@ -29,8 +29,7 @@ namespace Impl.Test
             Assert.That(result, Is.Not.Null);
             result.Replace('x', ' ');
             var table = new Table(result);
-            //TODO
-            //Assert.That(table.IsCorrect);
+            Assert.That(table.IsCorrect());
         }
 
         [Test]
@@ -57,8 +56,9 @@ namespace Impl.Test
             Assert.That(result, Is.Not.Null);
             result.Replace('x', ' ');
             var table = new Table(result);
+
             //TODO
-            //Assert.That(table.IsCorrect);
+            Assert.That(table.IsCorrect());
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Impl.Test
             var table = new Table(result);
 
             //TODO
-            //Assert.That(table.IsCorrect);
+            Assert.That(table.IsCorrect());
         }
 
     }
