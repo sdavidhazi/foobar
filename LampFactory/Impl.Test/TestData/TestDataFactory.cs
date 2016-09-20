@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using Contracts;
 using Impl.Extensions;
 using Impl.Model;
@@ -21,7 +19,7 @@ namespace Impl.Test.TestData
         {
             // Solve the original puzzle
             var solution = _solver.Solve(referencePuzzle);
-            
+
             // Transform data to a table
             var table = new Table(solution);
 
@@ -57,12 +55,43 @@ namespace Impl.Test.TestData
 
         public string TransformByRotation(string referencePuzzle, int angle)
         {
-            throw new NotImplementedException();   
+            var table = new Table(referencePuzzle);
+            var tableTransformed = table.Clone();
+
+            for (int row = 0; row < table.Length; row++)
+            {
+                for (int column = 0; column < table.Length; column++)
+                {
+                    int rowIndex = row;
+                    int colIndex = column;
+                    switch (angle)
+                    {
+                        case 90:
+                            rowIndex = column;
+                            colIndex = table.Length - row - 1;
+                            break;
+                        case 180:
+                            rowIndex = table.Length - row - 1;
+                            colIndex = table.Length - column - 1;
+                            break;
+                        case 270:
+                            rowIndex = table.Length - column - 1;
+                            colIndex = row;
+                            break;
+                    }
+                    tableTransformed[row, column] = table[rowIndex, colIndex];
+                }
+            }
+
+            return tableTransformed.ToString().Replace('o', ' ').Replace('x', ' ');
         }
 
         public IEnumerable<string> TransformByRotation(string referencePuzzle)
         {
-            throw new NotImplementedException();
+            yield return TransformByRotation(referencePuzzle, 0);
+            yield return TransformByRotation(referencePuzzle, 90);
+            yield return TransformByRotation(referencePuzzle, 180);
+            yield return TransformByRotation(referencePuzzle, 270);
         }
     }
 }
