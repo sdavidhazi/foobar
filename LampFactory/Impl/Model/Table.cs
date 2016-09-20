@@ -67,6 +67,15 @@ namespace Impl.Model
             }
         }
 
+        public bool HasNeighbour(int row, int col, byte cellType)
+        {
+            if (row > 0 && _table[row - 1][col] == cellType) return true;
+            if (row < Length - 1 && _table[row + 1][col] == cellType) return true;
+            if (col > 0 && _table[row][col - 1] == cellType) return true;
+            if (col < Length - 1 && _table[row][col + 1] == cellType) return true;
+            return false;
+
+        }
         public Table Clone()
         {
             return new Table(this);
