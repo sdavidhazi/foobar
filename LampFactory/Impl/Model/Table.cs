@@ -39,6 +39,19 @@ namespace Impl.Model
             }
         }
 
+        public Table(int length)
+        {
+            Length = length;
+            _table = new byte[Length, Length];
+            for (var row = 0; row < Length; row++)
+            {
+                for (var column = 0; column < Length; column++)
+                {
+                    _table[row, column] = TableMapping.Free;
+                }
+            }
+        }
+
         public bool Invalid { get; set; }
 
         public byte this[int row, int column]

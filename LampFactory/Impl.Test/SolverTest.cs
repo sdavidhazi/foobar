@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Contracts;
 using Impl.Model;
+using Impl.Test.Random;
 using Impl.Test.TestData;
 using NUnit.Framework;
 using NUnit.Util;
@@ -102,7 +103,8 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleSmall;
             var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
             var puzzles = testDataFactory.TransformByReplace(puzzle);
 
             // Act
@@ -115,7 +117,9 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleMiddle;
             var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
             var puzzles = testDataFactory.TransformByReplace(puzzle);
 
             // Act
@@ -128,7 +132,9 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleLarge;
             var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
             var puzzles = testDataFactory.TransformByReplace(puzzle);
 
             // Act
@@ -141,7 +147,9 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleSmall;
             var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
             var puzzles = testDataFactory.TransformByRotation(puzzle);
 
             // Act
@@ -154,7 +162,9 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleMiddle;
             var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
             var puzzles = testDataFactory.TransformByRotation(puzzle);
 
             // Act
@@ -167,12 +177,90 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleLarge;
             var solver = new Solver();
-            var testDataFactory = new TestDataFactory(solver);
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
             var puzzles = testDataFactory.TransformByRotation(puzzle);
 
             // Act
             RunTestWithMultiplePuzzles(solver, puzzles);
         }
+
+        [Test]
+
+        public void Solve_Random_Table_Size_20()
+        {
+            // Arrange
+            const int size = 20;
+            var solver = new Solver();
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
+            var puzzle = testDataFactory.GenerateRandomPuzzle(size);
+
+            RunTestWithSinglePuzzle(solver,puzzle);
+        }
+
+        [Test]
+
+        public void Solve_Random_Table_Size_40()
+        {
+            // Arrange
+            const int size = 40;
+            var solver = new Solver();
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
+            var puzzle = testDataFactory.GenerateRandomPuzzle(size);
+
+            RunTestWithSinglePuzzle(solver, puzzle);
+        }
+
+        [Test]
+
+        public void Solve_Random_Table_Size_60()
+        {
+            // Arrange
+            const int size = 60;
+            var solver = new Solver();
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
+            var puzzle = testDataFactory.GenerateRandomPuzzle(size);
+
+            RunTestWithSinglePuzzle(solver, puzzle);
+        }
+
+        [Test]
+
+        public void Solve_Random_Table_Size_80()
+        {
+            // Arrange
+            const int size = 80;
+            var solver = new Solver();
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
+            var puzzle = testDataFactory.GenerateRandomPuzzle(size);
+
+            RunTestWithSinglePuzzle(solver, puzzle);
+        }
+
+        [Test]
+
+        public void Solve_Random_Table_Size_100()
+        {
+            // Arrange
+            const int size = 100;
+            var solver = new Solver();
+            var random = new RNGRandomProvider();
+            var testDataFactory = new TestDataFactory(solver, random);
+
+            var puzzle = testDataFactory.GenerateRandomPuzzle(size);
+
+            RunTestWithSinglePuzzle(solver, puzzle);
+        }
+
 
         private void RunTestWithSinglePuzzle(ISolver solver, string puzzle)
         {
