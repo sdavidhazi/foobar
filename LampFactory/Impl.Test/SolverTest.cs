@@ -123,6 +123,19 @@ namespace Impl.Test
         }
 
         [Test]
+        public void Solve_Large_Table_WithReplacedPuzzles()
+        {
+            // Arrange
+            var puzzle = PuzzleLarge;
+            var solver = new Solver();
+            var testDataFactory = new TestDataFactory(solver);
+            var puzzles = testDataFactory.TransformByReplace(puzzle);
+
+            // Act
+            RunTestWithMultiplePuzzles(solver, puzzles);
+        }
+
+        [Test]
         public void Solve_Small_Table_WithRotatedPuzzles()
         {
             // Arrange
@@ -140,6 +153,19 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleMiddle;
+            var solver = new Solver();
+            var testDataFactory = new TestDataFactory(solver);
+            var puzzles = testDataFactory.TransformByRotation(puzzle);
+
+            // Act
+            RunTestWithMultiplePuzzles(solver, puzzles);
+        }
+
+        [Test]
+        public void Solve_Large_Table_WithRotatedPuzzles()
+        {
+            // Arrange
+            var puzzle = PuzzleLarge;
             var solver = new Solver();
             var testDataFactory = new TestDataFactory(solver);
             var puzzles = testDataFactory.TransformByRotation(puzzle);
