@@ -64,7 +64,11 @@ namespace Impl.Test
 
         #endregion
 
+        private const int TimeoutShort = 5000;
+        private const int TimeoutLong = 60000;
+
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Small_Table()
         {
             // Arrange
@@ -76,6 +80,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Mid_Table()
         {
             // Arrange
@@ -87,6 +92,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Large_Table()
         {
             // Arrange
@@ -98,7 +104,8 @@ namespace Impl.Test
         }
 
         [Test]
-        public void Solve_Small_Puzzle_WithReplacedPuzzles()
+        [Timeout(TimeoutLong)]
+        public void Solve_Small_Replaced_Puzzles()
         {
             // Arrange
             var puzzle = PuzzleSmall;
@@ -112,7 +119,8 @@ namespace Impl.Test
         }
 
         [Test]
-        public void Solve_Mid_Puzzle_WithReplacedPuzzles()
+        [Timeout(TimeoutLong)]
+        public void Solve_Mid_Replaced_Puzzles()
         {
             // Arrange
             var puzzle = PuzzleMiddle;
@@ -127,7 +135,8 @@ namespace Impl.Test
         }
 
         [Test]
-        public void Solve_Large_Puzzle_WithReplacedPuzzles()
+        [Timeout(TimeoutLong)]
+        public void Solve_Large_Replaced_Puzzles()
         {
             // Arrange
             var puzzle = PuzzleLarge;
@@ -142,7 +151,8 @@ namespace Impl.Test
         }
 
         [Test]
-        public void Solve_Small_Puzzle_WithRotatedPuzzles()
+        [Timeout(TimeoutLong)]
+        public void Solve_Small_Rotated_Puzzles()
         {
             // Arrange
             var puzzle = PuzzleSmall;
@@ -157,7 +167,8 @@ namespace Impl.Test
         }
 
         [Test]
-        public void Solve_Mid_Puzzle_WithRotatedPuzzles()
+        [Timeout(TimeoutLong)]
+        public void Solve_Mid_Rotated_Puzzles()
         {
             // Arrange
             var puzzle = PuzzleMiddle;
@@ -172,7 +183,8 @@ namespace Impl.Test
         }
 
         [Test]
-        public void Solve_Large_Puzzle_WithRotatedPuzzles()
+        [Timeout(TimeoutLong)]
+        public void Solve_Large_Rotated_Puzzles()
         {
             // Arrange
             var puzzle = PuzzleLarge;
@@ -187,6 +199,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Random_Puzzle_20x20()
         {
             // Arrange
@@ -201,6 +214,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Random_Puzzle_40x40()
         {
             // Arrange
@@ -215,6 +229,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Random_Puzzle_60x60()
         {
             // Arrange
@@ -229,6 +244,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Random_Puzzle_80x80()
         {
             // Arrange
@@ -243,6 +259,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutShort)]
         public void Solve_Random_Puzzle_100x100()
         {
             // Arrange
@@ -257,8 +274,9 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_14x14()
-        { 
+        {
             // Arrange
             var solver = new Solver();
             var puzzles = WellKnownPuzzles.Puzzles_14x14;
@@ -267,6 +285,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_20x20()
         {
             // Arrange
@@ -277,6 +296,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_25x25()
         {
             // Arrange
@@ -287,6 +307,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_30x30()
         {
             // Arrange
@@ -297,6 +318,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_40x40()
         {
             // Arrange
@@ -307,6 +329,7 @@ namespace Impl.Test
         }
 
         [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_70x70()
         {
             // Arrange

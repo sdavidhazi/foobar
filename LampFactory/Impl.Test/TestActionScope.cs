@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Impl.Test
 {
@@ -16,7 +15,7 @@ namespace Impl.Test
             _testAction = testAction;
             StartTime = DateTime.UtcNow;
         }
-
+        
         public void Dispose()
         {
             Console.WriteLine("{0} took {1} msecs in total.", _testAction, TimeElapsed.TotalMilliseconds);
