@@ -70,7 +70,8 @@
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random\IRandomProvider.cs" />
-    <Compile Include="SolverTest.cs" />
+    <Compile Include="SolverTest.Positive.cs" />
+    <Compile Include="SolverTest.Negative.cs" />
     <Compile Include="TestActionScope.cs" />
     <Compile Include="TestData\TestDataFactory.cs" />
   </ItemGroup>

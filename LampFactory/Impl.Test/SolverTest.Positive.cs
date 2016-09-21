@@ -10,7 +10,7 @@ using NUnit.Util;
 namespace Impl.Test
 {
     [TestFixture]
-    public class SolverTest
+    public partial class SolverTest
     {
         #region Puzzle Constants
         const string PuzzleSmall = @"  0    
@@ -198,7 +198,7 @@ namespace Impl.Test
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
-            RunTestWithSinglePuzzle(solver,puzzle);
+            RunTestWithSinglePuzzle(solver, puzzle);
         }
 
         [Test]
