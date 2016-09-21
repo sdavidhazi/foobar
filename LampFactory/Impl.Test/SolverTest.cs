@@ -1,6 +1,10 @@
-﻿using Impl.Model;
+﻿using System;
+using System.Collections.Generic;
+using Contracts;
+using Impl.Model;
 using Impl.Test.TestData;
 using NUnit.Framework;
+using NUnit.Util;
 
 namespace Impl.Test
 {
@@ -62,145 +66,107 @@ namespace Impl.Test
         [Test]
         public void Solve_Small_Table()
         {
-            string puzzle = PuzzleSmall;
-
             // Arrange
-            string result;
+            var puzzle = PuzzleSmall;
             var solver = new Solver();
-            using (new TestActionScope(nameof(Solve_Small_Table)))
-            {
-                result = solver.Solve(puzzle);
-            }
 
-            Assert.That(result, Is.Not.Null);
-            var table = new Table(result);
-            Assert.That(table.IsCorrect());
+            // Act
+            RunTestWithSinglePuzzle(solver, puzzle);
         }
 
         [Test]
         public void Solve_Mid_Table()
         {
-            string puzzle = PuzzleMiddle;
-
             // Arrange
+            var puzzle = PuzzleMiddle;
             var solver = new Solver();
-            string result;
-            using (new TestActionScope(nameof(Solve_Mid_Table)))
-            {
-                result = solver.Solve(puzzle);
-            }
 
-            Assert.That(result, Is.Not.Null);
-            var table = new Table(result);
-
-            Assert.That(table.IsCorrect());
+            // Act
+            RunTestWithSinglePuzzle(solver, puzzle);
         }
 
         [Test]
         public void Solve_Large_Table()
         {
-            string puzzle = PuzzleLarge;
-
             // Arrange
+            var puzzle = PuzzleLarge;
             var solver = new Solver();
-            string result;
 
-            using (new TestActionScope(nameof(Solve_Large_Table)))
-            {
-                result = solver.Solve(puzzle);
-            }
-
-            Assert.That(result, Is.Not.Null);
-            var table = new Table(result);
-
-            Assert.That(table.IsCorrect());
+            // Act
+            RunTestWithSinglePuzzle(solver, puzzle);
         }
 
         [Test]
         public void Solve_Small_Table_WithReplacedPuzzles()
         {
+            // Arrange
             var puzzle = PuzzleSmall;
-
             var solver = new Solver();
             var testDataFactory = new TestDataFactory(solver);
+            var puzzles = testDataFactory.TransformByReplace(puzzle);
 
-            foreach (var transformedPuzzle in testDataFactory.TransformByReplace(puzzle))
-            {
-                string result;
-                using (new TestActionScope(nameof(Solve_Small_Table_WithReplacedPuzzles)))
-                {
-                    result = solver.Solve(transformedPuzzle);
-                }
-
-                Assert.That(result, Is.Not.Null);
-                var table = new Table(result);
-                Assert.That(table.IsCorrect());
-            }
+            // Act
+            RunTestWithMultiplePuzzles(solver, puzzles);
         }
 
         [Test]
         public void Solve_Mid_Table_WithReplacedPuzzles()
         {
+            // Arrange
             var puzzle = PuzzleMiddle;
-
             var solver = new Solver();
             var testDataFactory = new TestDataFactory(solver);
+            var puzzles = testDataFactory.TransformByReplace(puzzle);
 
-            foreach (var transformedPuzzle in testDataFactory.TransformByReplace(puzzle))
-            {
-                string result;
-                using (new TestActionScope(nameof(Solve_Mid_Table_WithReplacedPuzzles)))
-                {
-                    result = solver.Solve(transformedPuzzle);
-                }
-
-                Assert.That(result, Is.Not.Null);
-                var table = new Table(result);
-                Assert.That(table.IsCorrect());
-            }
+            // Act
+            RunTestWithMultiplePuzzles(solver, puzzles);
         }
 
         [Test]
         public void Solve_Small_Table_WithRotatedPuzzles()
         {
+            // Arrange
             var puzzle = PuzzleSmall;
-
             var solver = new Solver();
             var testDataFactory = new TestDataFactory(solver);
+            var puzzles = testDataFactory.TransformByRotation(puzzle);
 
-            foreach (var transformedPuzzle in testDataFactory.TransformByRotation(puzzle))
-            {
-                string result;
-                using (new TestActionScope(nameof(Solve_Small_Table_WithRotatedPuzzles)))
-                {
-                    result = solver.Solve(transformedPuzzle);
-                }
-
-                Assert.That(result, Is.Not.Null);
-                var table = new Table(result);
-                Assert.That(table.IsCorrect());
-            }
+            // Act
+            RunTestWithMultiplePuzzles(solver, puzzles);
         }
 
         [Test]
         public void Solve_Mid_Table_WithRotatedPuzzles()
         {
+            // Arrange
             var puzzle = PuzzleMiddle;
-
             var solver = new Solver();
             var testDataFactory = new TestDataFactory(solver);
+            var puzzles = testDataFactory.TransformByRotation(puzzle);
 
-            foreach (var transformedPuzzle in testDataFactory.TransformByRotation(puzzle))
+            // Act
+            RunTestWithMultiplePuzzles(solver, puzzles);
+        }
+
+        private void RunTestWithSinglePuzzle(ISolver solver, string puzzle)
+        {
+            string result;
+            using (new TestActionScope())
             {
-                string result;
-                using (new TestActionScope(nameof(Solve_Mid_Table_WithRotatedPuzzles)))
-                {
-                    result = solver.Solve(transformedPuzzle);
-                }
+                result = solver.Solve(puzzle);
+                Console.WriteLine("Result:\n{0}", result.Replace(' ', 'x'));
+            }
 
-                Assert.That(result, Is.Not.Null);
-                var table = new Table(result);
-                Assert.That(table.IsCorrect());
+            Assert.That(result, Is.Not.Null);
+            var table = new Table(result);
+            Assert.That(table.IsCorrect());
+        }
+
+        private void RunTestWithMultiplePuzzles(ISolver solver, IEnumerable<string> puzzles)
+        {
+            foreach (var puzzle in puzzles)
+            {
+                RunTestWithSinglePuzzle(solver, puzzle);
             }
         }
     }

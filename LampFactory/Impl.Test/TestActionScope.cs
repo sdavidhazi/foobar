@@ -11,7 +11,7 @@ namespace Impl.Test
 
         public TimeSpan TimeElapsed => DateTime.UtcNow - StartTime;
 
-        public TestActionScope(string testAction)
+        public TestActionScope(string testAction = "Test action")
         {
             _testAction = testAction;
             StartTime = DateTime.UtcNow;
@@ -19,7 +19,7 @@ namespace Impl.Test
 
         public void Dispose()
         {
-            Console.WriteLine("{0} took {1} seconds in total.", _testAction, TimeElapsed.TotalSeconds);
+            Console.WriteLine("{0} took {1} msecs in total.", _testAction, TimeElapsed.TotalMilliseconds);
         }
     }
 }
