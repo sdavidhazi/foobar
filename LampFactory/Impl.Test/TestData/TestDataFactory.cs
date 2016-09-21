@@ -129,10 +129,8 @@ namespace Impl.Test.TestData
             var result = _solver.Solve(basePuzzle);
             var resultTable = new Table(result);
 
-            // Add wall contraints
-            var numberOfWallReplace = _random.Next(0, numberOfWalls);
-
-            // Shuffle wasll positions
+            // Add wall constraints
+            var numberOfWallReplace = _random.Next(0, numberOfWalls);            
             wallPositions.Shuffle(_random);
             var wallPositionsToBeReplaced = wallPositions.Take(numberOfWallReplace);
 

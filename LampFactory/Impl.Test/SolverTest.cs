@@ -103,7 +103,7 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleSmall;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
             var puzzles = testDataFactory.TransformByReplace(puzzle);
 
@@ -117,7 +117,7 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleMiddle;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzles = testDataFactory.TransformByReplace(puzzle);
@@ -132,7 +132,7 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleLarge;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzles = testDataFactory.TransformByReplace(puzzle);
@@ -147,7 +147,7 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleSmall;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzles = testDataFactory.TransformByRotation(puzzle);
@@ -162,7 +162,7 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleMiddle;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzles = testDataFactory.TransformByRotation(puzzle);
@@ -177,7 +177,7 @@ namespace Impl.Test
             // Arrange
             var puzzle = PuzzleLarge;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzles = testDataFactory.TransformByRotation(puzzle);
@@ -193,7 +193,7 @@ namespace Impl.Test
             // Arrange
             const int size = 20;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
@@ -208,7 +208,7 @@ namespace Impl.Test
             // Arrange
             const int size = 40;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
@@ -223,7 +223,7 @@ namespace Impl.Test
             // Arrange
             const int size = 60;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
@@ -238,7 +238,7 @@ namespace Impl.Test
             // Arrange
             const int size = 80;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
@@ -253,7 +253,7 @@ namespace Impl.Test
             // Arrange
             const int size = 100;
             var solver = new Solver();
-            var random = new RNGRandomProvider();
+            var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
