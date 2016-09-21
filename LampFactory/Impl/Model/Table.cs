@@ -79,7 +79,6 @@ namespace Impl.Model
 
         public void SetupLightBesideWalls()
         {
-            var missingLamp = false;
             for (var row = 0; row < Length; row++)
             {
                 for (var col = 0; col < Length; col++)

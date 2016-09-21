@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Contracts;
-using Impl.Extensions;
+﻿using Contracts;
 using Impl.Model;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Impl
 {
-    public class Solver : ISolver
+    public class ParallelSolver : ISolver
     {
         private Table Solve2(Table table)
         {
@@ -26,17 +23,24 @@ namespace Impl
                 return Solve2(table);
             }
 
-            foreach (var cell in list)
-            {
-                var clone = table.Clone();
-                clone.SetupLamp(cell.Item1, cell.Item2);
-                if (clone.Invalid)
-                    continue;
-                var result = Solve2(clone);
-                if (result != null)
-                    return result;
-            }
-            return null;
+            ConcurrentBag<Table> results = new ConcurrentBag<Table>();
+            Parallel.ForEach(list, (cell, loopState) =>
+               {
+                   var clone = table.Clone();
+                   clone.SetupLamp(cell.Item1, cell.Item2);
+
+                   if (!clone.Invalid)
+                   {
+                       var result = Solve2(clone);
+                       if (result != null)
+                       {
+                           results.Add(result);
+                           loopState.Stop();
+                       }
+                   }
+               });
+
+            return results.FirstOrDefault();
         }
 
         public string Solve(string table)

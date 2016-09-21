@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Extensions\TableMapping.cs" />
     <Compile Include="Model\Table.cs" />
+    <Compile Include="ParallelSolver.cs" />
     <Compile Include="Solver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
