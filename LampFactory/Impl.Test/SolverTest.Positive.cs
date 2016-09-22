@@ -62,10 +62,48 @@ namespace Impl.Test
    3     1##     ## # #  
 # #  1#     # 3       1 #";
 
+        const string Puzzle_25x25_Challenging = @"   ##  ## 2     #   1 2  
+ #    #   #  #  ### #  # 
+2 ##      #  ## ## 1  #  
+    ### 2### # #      # #
+2#  #    #          ##  #
+  0  # # # # 0#  # # #   
+ #      ###     ##   # # 
+ ##  ## 1  #  0 #  #    #
+###   ##   #  #  0#  0  #
+   #          2   ####   
+  #  # 1#1 # 1    #  ###0
+ ### 1    1# ## ## # #   
+                         
+   # # ## ## #1    1 ### 
+1###  #    2 # 0#1 #  #  
+   ####   1          #   
+#  2  #2  #  #   ##   ###
+#    #  # 0  #  2 ##  ## 
+ # #   ##     ###      # 
+   # # #  #2 # # # #  2  
+#  ##          #    #  #1
+# #      # # ###1 ###    
+  #  1 ## ##  #      ## 2
+ #  # ###  #  #   #    # 
+  2 2   #     1 ##  ##   ";
+
         #endregion
 
-        private const int TimeoutShort = 5000;
-        private const int TimeoutLong = 60000;
+        private const int TimeoutShort = 10000;
+        private const int TimeoutLong = 90000;
+
+        [Test]
+        [Timeout(TimeoutShort)]
+        public void Solve_Challenging_Table()
+        {
+            // Arrange
+            var puzzle = Puzzle_25x25_Challenging;
+            var solver = new Solver();
+
+            // Act
+            RunTestWithSinglePuzzle(solver, puzzle);
+        }
 
         [Test]
         [Timeout(TimeoutShort)]
@@ -341,15 +379,21 @@ namespace Impl.Test
 
         private void RunTestWithSinglePuzzle(ISolver solver, string puzzle)
         {
+            Console.WriteLine("Puzzle:\n{0}", puzzle.Replace(' ', '-'));
+
             string result;
             using (new TestActionScope())
             {
                 result = solver.Solve(puzzle);
-                if (result != null)
-                    Console.WriteLine("Result:\n{0}", result.Replace(' ', 'x'));
             }
 
-            Assert.That(result, Is.Not.Null);
+            if (result != null)
+                Console.WriteLine("Result:\n{0}", result.Replace(' ', 'x'));
+
+
+            Console.WriteLine(string.Empty.PadLeft(50, '*'));
+
+           Assert.That(result, Is.Not.Null);
             var table = new Table(result);
             Assert.That(table.IsCorrect());
         }
