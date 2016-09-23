@@ -274,7 +274,7 @@ namespace Impl.Test
             const int size = 20;
             var solver = CreateSolver();
             var random = new RngRandomProvider();
-            var testDataFactory = new TestDataFactory(new Solver(), random);
+            var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
@@ -289,7 +289,7 @@ namespace Impl.Test
             const int size = 40;
             var solver = CreateSolver();
             var random = new RngRandomProvider();
-            var testDataFactory = new TestDataFactory(new Solver(), random);
+            var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
@@ -304,7 +304,7 @@ namespace Impl.Test
             const int size = 60;
             var solver = CreateSolver();
             var random = new RngRandomProvider();
-            var testDataFactory = new TestDataFactory(new Solver(), random);
+            var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
@@ -319,7 +319,7 @@ namespace Impl.Test
             const int size = 80;
             var solver = CreateSolver();
             var random = new RngRandomProvider();
-            var testDataFactory = new TestDataFactory(new Solver(), random);
+            var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
@@ -334,7 +334,7 @@ namespace Impl.Test
             const int size = 100;
             var solver = CreateSolver();
             var random = new RngRandomProvider();
-            var testDataFactory = new TestDataFactory(new Solver(), random);
+            var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
@@ -349,7 +349,7 @@ namespace Impl.Test
             const int size = 200;
             var solver = CreateSolver();
             var random = new RngRandomProvider();
-            var testDataFactory = new TestDataFactory(new Solver(), random);
+            var testDataFactory = new TestDataFactory(solver, random);
 
             var puzzle = testDataFactory.GenerateRandomPuzzle(size);
 
@@ -358,7 +358,7 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
-        public void Solve_WellKnown_Puzzle_14x14()
+        public void Solve_WellKnown_Puzzles_14x14()
         {
             // Arrange
             var solver = CreateSolver();
@@ -369,7 +369,7 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
-        public void Solve_WellKnown_Puzzle_20x20()
+        public void Solve_WellKnown_Puzzles_20x20()
         {
             // Arrange
             var solver = CreateSolver();
@@ -380,7 +380,7 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
-        public void Solve_WellKnown_Puzzle_25x25()
+        public void Solve_WellKnown_Puzzles_25x25()
         {
             // Arrange
             var solver = CreateSolver();
@@ -391,7 +391,7 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
-        public void Solve_WellKnown_Puzzle_30x30()
+        public void Solve_WellKnown_Puzzles_30x30()
         {
             // Arrange
             var solver = CreateSolver();
@@ -402,7 +402,7 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
-        public void Solve_WellKnown_Puzzle_40x40()
+        public void Solve_WellKnown_Puzzles_40x40()
         {
             // Arrange
             var solver = CreateSolver();
@@ -413,7 +413,7 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
-        public void Solve_WellKnown_Puzzle_70x70()
+        public void Solve_WellKnown_Puzzles_70x70()
         {
             // Arrange
             var solver = CreateSolver();
