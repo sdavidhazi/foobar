@@ -9,7 +9,7 @@ using Impl.Model;
 
 namespace Impl
 {
-    public class Solver : ISolver
+    internal class Solver : ISolver
     {
         private Table Solve2(Table table)
         {
