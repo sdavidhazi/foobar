@@ -90,12 +90,12 @@ namespace Impl.Test
 
         #endregion
 
-        private const int TimeoutShort = 10000;
-        private const int TimeoutLong = 90000;
+        private const int TimeoutShort = 5000;
+        private const int TimeoutLong = 25000;
 
         [Test]
         [Timeout(TimeoutShort)]
-        public void Solve_Challenging_Table()
+        public void Solve_Challenging_Table_25x25()
         {
             // Arrange
             var puzzle = Puzzle_25x25_Challenging;
@@ -313,6 +313,21 @@ namespace Impl.Test
 
         [Test]
         [Timeout(TimeoutLong)]
+        public void Solve_Random_Puzzle_200x200()
+        {
+            // Arrange
+            const int size = 200;
+            var solver = CreateSolver();
+            var random = new RngRandomProvider();
+            var testDataFactory = new TestDataFactory(new Solver(), random);
+
+            var puzzle = testDataFactory.GenerateRandomPuzzle(size);
+
+            RunTestWithSinglePuzzle(solver, puzzle);
+        }
+
+        [Test]
+        [Timeout(TimeoutLong)]
         public void Solve_WellKnown_Puzzle_14x14()
         {
             // Arrange
@@ -379,11 +394,12 @@ namespace Impl.Test
 
         public ISolver CreateSolver()
         {
-            return new Solver();
+            return new ParallelSolver();
         }
 
         private void RunTestWithSinglePuzzle(ISolver solver, string puzzle)
         {
+            Console.WriteLine(string.Empty.PadLeft(50, '*'));
             Console.WriteLine("Puzzle:\n{0}", puzzle.Replace(' ', '-'));
 
             string result;
@@ -393,12 +409,9 @@ namespace Impl.Test
             }
 
             if (result != null)
-                Console.WriteLine("Result:\n{0}", result.Replace(' ', 'x'));
+                Console.WriteLine("Result:\n{0}", result);            
 
-
-            Console.WriteLine(string.Empty.PadLeft(50, '*'));
-
-           Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.Not.Null);
             var table = new Table(result);
             Assert.That(table.IsCorrect());
         }

@@ -16,14 +16,39 @@ namespace Impl
             var tableSnapshots = new ConcurrentStack<Table>();
             tableSnapshots.Push(table.Clone());
 
-            ConcurrentBag<Table> results = new ConcurrentBag<Table>();
-
+            Table result = null;
             while (tableSnapshots.Count > 0)
             {
                 Table snapshot;
                 if (!tableSnapshots.TryPop(out snapshot)) break;
+                if (snapshot == null) continue;
 
                 var list = snapshot.GetMinCellList();
+
+                bool invalid = false;
+                while (list != null && list.Count == 1)
+                {
+                    snapshot.SetupLamp(list[0].Item1, list[0].Item2);
+
+                    if (snapshot.Invalid)
+                    {
+                        invalid = true;
+                        break;
+                    }
+
+                    if (snapshot.IsReady())
+                        return snapshot;
+
+                    list = snapshot.GetMinCellList();
+                }
+
+                if (invalid)
+                    continue;
+
+                if (snapshot.Invalid)
+                    continue;
+                if (snapshot.IsReady())
+                    return snapshot;
 
                 Parallel.ForEach(list, (cell, loopState) =>
                 {
@@ -34,7 +59,7 @@ namespace Impl
                     {
                         if (clone.IsReady())
                         {
-                            results.Add(clone);
+                            result = clone;
                             loopState.Stop();
                         }
                         else
@@ -44,8 +69,8 @@ namespace Impl
                     }
                 });
 
-                if (results.Any())
-                    return results.FirstOrDefault();
+                if (result != null)
+                    return result;
             }
 
             return null;

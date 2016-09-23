@@ -171,7 +171,7 @@ namespace Impl.Model
         {
             List<Tuple<int, int>> result = null;
 
-            for (var row = 0; row < Length; row++)
+            Parallel.For(0, Length, (row, loopState) =>
             {
                 for (var col = 0; col < Length; col++)
                 {
@@ -210,7 +210,7 @@ namespace Impl.Model
                             list.Add(Tuple.Create(row, i));
                             continue;
                         }
-                        if (_table[row, i] != TableMapping.Lit && _table[row,i] != TableMapping.Forbidden)
+                        if (_table[row, i] != TableMapping.Lit && _table[row, i] != TableMapping.Forbidden)
                             break;
                     }
                     for (var i = col + 1; i < Length; i++)
@@ -220,7 +220,7 @@ namespace Impl.Model
                             list.Add(Tuple.Create(row, i));
                             continue;
                         }
-                        if (_table[row, i] != TableMapping.Lit && _table[row,i] != TableMapping.Forbidden)
+                        if (_table[row, i] != TableMapping.Lit && _table[row, i] != TableMapping.Forbidden)
                             break;
                     }
                     if (result == null || list.Count < result.Count)
@@ -228,10 +228,14 @@ namespace Impl.Model
                         result = list;
 
                         if (result.Count == 1)
-                            return result;
+                        {
+                            // return
+                            loopState.Stop();
+                        }
                     }
                 }
-            }
+            });
+
             return result;
         }
 
