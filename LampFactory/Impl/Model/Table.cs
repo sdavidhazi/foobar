@@ -52,7 +52,7 @@ namespace Impl.Model
             }
         }
 
-        public bool Invalid { get; set; }
+        public bool Invalid;
 
         public byte this[int row, int column]
         {
@@ -67,7 +67,7 @@ namespace Impl.Model
 
         public void SetupLamp(int row, int column)
         {
-            if (_table[row, column] != TableMapping.Free)
+            if (_table[row, column] != TableMapping.Free && _table[row, column] != TableMapping.Forbidden)
             {
                 throw new InvalidOperationException("Setting up a lamp is not allowed since the cell is already used.");
             }
@@ -83,7 +83,8 @@ namespace Impl.Model
             {
                 for (var col = 0; col < Length; col++)
                 {
-                    if (_table[row, col] > TableMapping.Wall4)
+                    var cell = _table[row, col];
+                    if (cell > TableMapping.Wall4)
                         continue;
 
                     var lampCount = 0;
@@ -138,16 +139,29 @@ namespace Impl.Model
                         }
                     }
 
-                    if (lampCount + freeCount < _table[row, col] || lampCount > _table[row, col])
+                    var missingLamp = cell - lampCount;
+
+                    if (freeCount < missingLamp || missingLamp < 0)
                     {
                         Invalid = true;
                         return;
                     }
 
-                    if (lampCount + freeCount == _table[row, col] && freeCount > 0)
+                    if (missingLamp == freeCount && freeCount > 0)
                     {
                         SetupLamp(freeRow, freeCol);
                         return;
+                    }
+                    if (missingLamp == 0 && freeCount > 0)
+                    {
+                        if (col > 0 && _table[row, col - 1] == TableMapping.Free)
+                            _table[row, col - 1] = TableMapping.Forbidden;
+                        if (col < Length - 1 && _table[row, col + 1] == TableMapping.Free)
+                            _table[row, col + 1] = TableMapping.Forbidden;
+                        if (row > 0 && _table[row - 1, col] == TableMapping.Free)
+                            _table[row - 1, col] = TableMapping.Forbidden;
+                        if (row < Length - 1 && _table[row + 1, col] == TableMapping.Free)
+                            _table[row + 1, col] = TableMapping.Forbidden;
                     }
                 }
             }
@@ -156,15 +170,18 @@ namespace Impl.Model
         public List<Tuple<int, int>> GetMinCellList()
         {
             List<Tuple<int, int>> result = null;
+
             for (var row = 0; row < Length; row++)
             {
                 for (var col = 0; col < Length; col++)
                 {
-                    if (_table[row, col] != TableMapping.Free)
+                    if (_table[row, col] != TableMapping.Free && _table[row, col] != TableMapping.Forbidden)
                         continue;
 
-                    var list = new List<Tuple<int, int>>();
-                    list.Add(Tuple.Create(row, col));
+                    List<Tuple<int, int>> list = new List<Tuple<int, int>>();
+
+                    if (_table[row, col] == TableMapping.Free)
+                        list.Add(Tuple.Create(row, col));
 
                     for (var i = row - 1; i >= 0; i--)
                     {
@@ -173,7 +190,7 @@ namespace Impl.Model
                             list.Add(Tuple.Create(i, col));
                             continue;
                         }
-                        if (_table[i, col] != TableMapping.Lit)
+                        if (_table[i, col] != TableMapping.Lit && _table[i, col] != TableMapping.Forbidden)
                             break;
                     }
                     for (var i = row + 1; i < Length; i++)
@@ -183,7 +200,7 @@ namespace Impl.Model
                             list.Add(Tuple.Create(i, col));
                             continue;
                         }
-                        if (_table[i, col] != TableMapping.Lit)
+                        if (_table[i, col] != TableMapping.Lit && _table[i, col] != TableMapping.Forbidden)
                             break;
                     }
                     for (var i = col - 1; i >= 0; i--)
@@ -193,7 +210,7 @@ namespace Impl.Model
                             list.Add(Tuple.Create(row, i));
                             continue;
                         }
-                        if (_table[row, i] != TableMapping.Lit)
+                        if (_table[row, i] != TableMapping.Lit && _table[row,i] != TableMapping.Forbidden)
                             break;
                     }
                     for (var i = col + 1; i < Length; i++)
@@ -203,7 +220,7 @@ namespace Impl.Model
                             list.Add(Tuple.Create(row, i));
                             continue;
                         }
-                        if (_table[row, i] != TableMapping.Lit)
+                        if (_table[row, i] != TableMapping.Lit && _table[row,i] != TableMapping.Forbidden)
                             break;
                     }
                     if (result == null || list.Count < result.Count)
@@ -222,7 +239,7 @@ namespace Impl.Model
         {
             for (var i = row + 1; i < Length; i++)
             {
-                if (_table[i, column] == TableMapping.Free || _table[i, column] == TableMapping.Lit)
+                if (_table[i, column] >= TableMapping.Free)
                     _table[i, column] = TableMapping.Lit;
                 else
                     break;
@@ -230,7 +247,7 @@ namespace Impl.Model
 
             for (var i = row - 1; i >= 0; i--)
             {
-                if (_table[i, column] == TableMapping.Free || _table[i, column] == TableMapping.Lit)
+                if (_table[i, column] >= TableMapping.Free)
                     _table[i, column] = TableMapping.Lit;
                 else
                     break;
@@ -238,7 +255,7 @@ namespace Impl.Model
 
             for (var i = column + 1; i < Length; i++)
             {
-                if (_table[row, i] == TableMapping.Free || _table[row, i] == TableMapping.Lit)
+                if (_table[row, i] >= TableMapping.Free)
                     _table[row, i] = TableMapping.Lit;
                 else
                     break;
@@ -246,7 +263,7 @@ namespace Impl.Model
 
             for (var i = column - 1; i >= 0; i--)
             {
-                if (_table[row, i] == TableMapping.Free || _table[row, i] == TableMapping.Lit)
+                if (_table[row, i] >= TableMapping.Free)
                     _table[row, i] = TableMapping.Lit;
                 else
                     break;
@@ -259,7 +276,7 @@ namespace Impl.Model
             {
                 for (var j = 0; j < Length; j++)
                 {
-                    if (_table[Length - i - 1, Length - j - 1] == TableMapping.Free)
+                    if (_table[Length - i - 1, Length - j - 1] == TableMapping.Free || _table[Length - i - 1, Length - j - 1] == TableMapping.Forbidden)
                         return false;
                 }
             }
