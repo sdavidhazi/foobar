@@ -99,7 +99,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = Puzzle_25x25_Challenging;
-            var solver = new Solver();
+            var solver = CreateSolver();
 
             // Act
             RunTestWithSinglePuzzle(solver, puzzle);
@@ -111,7 +111,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleSmall;
-            var solver = new Solver();
+            var solver = CreateSolver();
 
             // Act
             RunTestWithSinglePuzzle(solver, puzzle);
@@ -123,7 +123,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleMiddle;
-            var solver = new Solver();
+            var solver = CreateSolver();
 
             // Act
             RunTestWithSinglePuzzle(solver, puzzle);
@@ -135,7 +135,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleLarge;
-            var solver = new Solver();
+            var solver = CreateSolver();
 
             // Act
             RunTestWithSinglePuzzle(solver, puzzle);
@@ -147,7 +147,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleSmall;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
             var puzzles = testDataFactory.TransformByReplace(puzzle);
@@ -162,7 +162,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleMiddle;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -178,7 +178,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleLarge;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -194,7 +194,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleSmall;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -210,7 +210,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleMiddle;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -226,7 +226,7 @@ namespace Impl.Test
         {
             // Arrange
             var puzzle = PuzzleLarge;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -242,7 +242,7 @@ namespace Impl.Test
         {
             // Arrange
             const int size = 20;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -257,7 +257,7 @@ namespace Impl.Test
         {
             // Arrange
             const int size = 40;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -272,7 +272,7 @@ namespace Impl.Test
         {
             // Arrange
             const int size = 60;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -287,7 +287,7 @@ namespace Impl.Test
         {
             // Arrange
             const int size = 80;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -302,7 +302,7 @@ namespace Impl.Test
         {
             // Arrange
             const int size = 100;
-            var solver = new Solver();
+            var solver = CreateSolver();
             var random = new RngRandomProvider();
             var testDataFactory = new TestDataFactory(new Solver(), random);
 
@@ -316,7 +316,7 @@ namespace Impl.Test
         public void Solve_WellKnown_Puzzle_14x14()
         {
             // Arrange
-            var solver = new Solver();
+            var solver = CreateSolver();
             var puzzles = WellKnownPuzzles.Puzzles_14x14;
 
             RunTestWithMultiplePuzzles(solver, puzzles);
@@ -327,7 +327,7 @@ namespace Impl.Test
         public void Solve_WellKnown_Puzzle_20x20()
         {
             // Arrange
-            var solver = new Solver();
+            var solver = CreateSolver();
             var puzzles = WellKnownPuzzles.Puzzles_20x20;
 
             RunTestWithMultiplePuzzles(solver, puzzles);
@@ -338,7 +338,7 @@ namespace Impl.Test
         public void Solve_WellKnown_Puzzle_25x25()
         {
             // Arrange
-            var solver = new Solver();
+            var solver = CreateSolver();
             var puzzles = WellKnownPuzzles.Puzzles_25x25;
 
             RunTestWithMultiplePuzzles(solver, puzzles);
@@ -349,7 +349,7 @@ namespace Impl.Test
         public void Solve_WellKnown_Puzzle_30x30()
         {
             // Arrange
-            var solver = new Solver();
+            var solver = CreateSolver();
             var puzzles = WellKnownPuzzles.Puzzles_30x30;
 
             RunTestWithMultiplePuzzles(solver, puzzles);
@@ -360,7 +360,7 @@ namespace Impl.Test
         public void Solve_WellKnown_Puzzle_40x40()
         {
             // Arrange
-            var solver = new Solver();
+            var solver = CreateSolver();
             var puzzles = WellKnownPuzzles.Puzzles_40x40;
 
             RunTestWithMultiplePuzzles(solver, puzzles);
@@ -371,10 +371,15 @@ namespace Impl.Test
         public void Solve_WellKnown_Puzzle_70x70()
         {
             // Arrange
-            var solver = new Solver();
+            var solver = CreateSolver();
             var puzzles = WellKnownPuzzles.Puzzles_70x70;
 
             RunTestWithMultiplePuzzles(solver, puzzles);
+        }
+
+        public ISolver CreateSolver()
+        {
+            return new Solver();
         }
 
         private void RunTestWithSinglePuzzle(ISolver solver, string puzzle)
