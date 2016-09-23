@@ -99,13 +99,14 @@ namespace Impl.Test.TestData
             yield return TransformByRotation(referencePuzzle, 270);
         }
 
-        public string GenerateRandomPuzzle(int size)
+        public string GenerateRandomPuzzle(int size, int numberOfWalls = 0, double maxContraintRatio = 0)
         {
             if (size <= 1)
                 throw new ArgumentException("Puzzle size must be grather than 1", nameof(size));
 
-            var numberOfWalls = _random.Next(1, (size * size) -1);
-            var wallPositions = new List<Tuple<int,int>>();
+            numberOfWalls = numberOfWalls == 0 ? _random.Next(1, (size * size) - 1) : numberOfWalls;
+
+            var wallPositions = new List<Tuple<int, int>>();
             var table = new Table(size);
 
             // Setup puzzle without wall constraints
@@ -121,7 +122,7 @@ namespace Impl.Test.TestData
                 }
 
                 table[row, column] = TableMapping.Wall;
-                wallPositions.Add(new Tuple<int, int>(row,column));
+                wallPositions.Add(new Tuple<int, int>(row, column));
             }
 
             // Solve the basic puzzle
@@ -130,7 +131,20 @@ namespace Impl.Test.TestData
             var resultTable = new Table(result);
 
             // Add wall constraints
-            var numberOfWallReplace = _random.Next(0, numberOfWalls);            
+            int numberOfWallReplace = 0;
+            if (maxContraintRatio == 0)
+            {
+                numberOfWallReplace = _random.Next(0, numberOfWalls);
+            }
+            else
+            {
+
+                int max = (int)(numberOfWalls * maxContraintRatio);
+                int min = max / 2;
+
+                numberOfWallReplace = _random.Next(min, max);
+            }
+
             wallPositions.Shuffle(_random);
             var wallPositionsToBeReplaced = wallPositions.Take(numberOfWallReplace);
 

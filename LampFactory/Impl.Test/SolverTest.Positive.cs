@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Contracts;
 using Impl.Model;
 using Impl.Test.Random;
@@ -92,6 +93,35 @@ namespace Impl.Test
 
         private const int TimeoutShort = 5000;
         private const int TimeoutLong = 25000;
+
+        [Test]
+        [Ignore("For test puzzle generation only")]
+        public void GeneratePuzzles()
+        {            
+            var testDataFactory = new TestDataFactory(new ParallelSolver(), new RngRandomProvider());
+
+            var sizes = new[] { 70, 100, 120, 200 };
+            const int count = 20;
+
+            foreach (var size in sizes)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    var puzzle = testDataFactory.GenerateRandomPuzzle(size, size * 16, 0.3);
+
+                    string time = DateTime.UtcNow.ToString("hhmmss");
+                    string directory = $@"c:\Temp\Puzzles\{size}\{time}";
+
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    string path = $@"{directory}\{i}.txt";
+                    File.WriteAllText(path, puzzle);
+                }
+            }
+        }
 
         [Test]
         [Timeout(TimeoutShort)]
@@ -409,7 +439,7 @@ namespace Impl.Test
             }
 
             if (result != null)
-                Console.WriteLine("Result:\n{0}", result);            
+                Console.WriteLine("Result:\n{0}", result);
 
             Assert.That(result, Is.Not.Null);
             var table = new Table(result);
